@@ -4,47 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barres Dynamiques</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .bar-container {
+            display: flex;
+            flex-direction: column; /* Aligner les barres verticalement */
+            gap: 10px;
+            height: 100vh;
+            justify-content: center; /* Centrer verticalement les barres */
+        }
+
+        .bar {
+            height: 30px; /* Hauteur des barres */
+            width: 0; /* La largeur sera dynamique */
+            background-color: red; /* Couleur de la barre */
+            border-radius: 5px;
+            transition: width 0.3s ease; /* Animation pour la largeur */
+        }
+
+        .bar1 { background-color: red; }
+        .bar2 { background-color: blue; }
+        .bar3 { background-color: green; }
+        .bar4 { background-color: yellow; }
+        .bar5 { background-color: purple; }
+        .bar6 { background-color: orange; }
+        .bar7 { background-color: pink; }
+        .bar8 { background-color: cyan; }
+        .bar9 { background-color: magenta; }
+    </style>
 </head>
 <body>
-    <canvas id="myChart" width="400" height="200"></canvas>
+    <div class="bar-container">
+        <div class="bar bar1" id="bar1"></div>
+        <div class="bar bar2" id="bar2"></div>
+        <div class="bar bar3" id="bar3"></div>
+        <div class="bar bar4" id="bar4"></div>
+        <div class="bar bar5" id="bar5"></div>
+        <div class="bar bar6" id="bar6"></div>
+        <div class="bar bar7" id="bar7"></div>
+        <div class="bar bar8" id="bar8"></div>
+        <div class="bar bar9" id="bar9"></div>
+    </div>
 
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script>
         const socket = io();
 
-        const ctx = document.getElementById("myChart").getContext("2d");
-        const myChart = new Chart(ctx, {
-            type: "bar",
-            data: {
-                labels: ["Barre 1", "Barre 2", "Barre 3", "Barre 4", "Barre 5", "Barre 6", "Barre 7", "Barre 8", "Barre 9"],
-                datasets: [
-                    {
-                        label: "Valeurs",
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                        backgroundColor: ["red", "blue", "green", "yellow", "purple", "orange", "pink", "cyan", "magenta"],
-                    },
-                ],
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                    },
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                    },
-                },
-            },
-        });
+        // Fonction pour mettre à jour la largeur de la barre
+        function updateBarWidth(barId, value) {
+            const bar = document.getElementById(barId);
+            bar.style.width = `${value}%`; // La valeur est en pourcentage
+        }
 
-        // Met à jour les barres dynamiquement
+        // Recevoir les données des barres
         socket.on("updateBars", (data) => {
             console.log("[Client] Données reçues pour mise à jour :", data);
-            myChart.data.datasets[0].data = data;
-            myChart.update();
+
+            // Mettre à jour la largeur de chaque barre
+            data.forEach((value, index) => {
+                const barId = `bar${index + 1}`;
+                updateBarWidth(barId, value);
+            });
         });
 
         // Logs pour vérifier la connexion et les erreurs
