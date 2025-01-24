@@ -1,33 +1,41 @@
-<script>
-    const socket = io("https://dse-o4si01tiq-alexandrerollands-projects.vercel.app"); // Remplace par l'URL correcte
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barres Dynamiques</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> <!-- Inclure socket.io -->
+</head>
+<body>
+    <canvas id="myChart" width="400" height="200"></canvas>
 
-    const ctx = document.getElementById("myChart").getContext("2d");
-    const myChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: ["Barre 1", "Barre 2", "Barre 3"],
-            datasets: [
-                {
-                    label: "Valeurs",
+    <script>
+        // Connexion au serveur WebSocket via Socket.io
+        const socket = io("https://dse-9zybblybf-alexandrerollands-projects.vercel.app");
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Barre 1', 'Barre 2', 'Barre 3'],
+                datasets: [{
+                    label: 'Valeurs',
                     data: [0, 0, 0],
-                    backgroundColor: ["red", "blue", "green"],
-                },
-            ],
-        },
-        options: {
-            responsive: true,
-        },
-    });
+                    backgroundColor: ['red', 'blue', 'green']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
 
-    // Log pour les données mises à jour
-    socket.on("updateBars", (data) => {
-        console.log("[Client] Données reçues pour mise à jour :", data);
-        myChart.data.datasets[0].data = data;
-        myChart.update();
-    });
-
-    // Log en cas d'erreur de connexion au WebSocket
-    socket.on("connect_error", (err) => {
-        console.error("[Client] Erreur de connexion Socket.io :", err);
-    });
-</script>
+        // Écouter les mises à jour envoyées par le serveur
+        socket.on('updateBars', (data) => {
+            console.log("[Client] Données reçues pour mise à jour :", data);
+            myChart.data.datasets[0].data = data;
+            myChart.update();
+        });
+    </script>
+</body>
+</html>
