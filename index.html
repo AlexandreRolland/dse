@@ -3,9 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Barres Dynamiques</title>
+    <a href="/buttons">CHOIX</a>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <span>coucou</span>
+    <canvas id="myChart" width="400" height="200"></canvas>
+
+    <script>
+        const socket = io("https://ton-backend.up.railway.app"); // Remplace par l'URL de ton backend
+        const ctx = document.getElementById('myChart').getContext('2d');
+        
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Barre 1', 'Barre 2', 'Barre 3'],
+                datasets: [{
+                    label: 'Valeurs',
+                    data: [0, 0, 0],
+                    backgroundColor: ['red', 'blue', 'green']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        // Écoute les mises à jour en temps réel
+        socket.on('updateBars', (data) => {
+            myChart.data.datasets[0].data = data;
+            myChart.update();
+        });
+    </script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 </body>
 </html>
