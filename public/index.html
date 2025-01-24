@@ -4,38 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barres Dynamiques</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> <!-- Inclure socket.io -->
+    <style>
+        .bar-container {
+            width: 100%;
+            height: 40px;
+            margin: 5px 0;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+        }
+
+        .bar {
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        .bar1 { background-color: red; }
+        .bar2 { background-color: blue; }
+        .bar3 { background-color: green; }
+        .bar4 { background-color: orange; }
+        .bar5 { background-color: purple; }
+        .bar6 { background-color: yellow; }
+        .bar7 { background-color: pink; }
+        .bar8 { background-color: brown; }
+        .bar9 { background-color: grey; }
+    </style>
 </head>
 <body>
-    <canvas id="myChart" width="400" height="200"></canvas>
+    <div id="bar1" class="bar-container">
+        <div class="bar bar1"></div>
+    </div>
+    <div id="bar2" class="bar-container">
+        <div class="bar bar2"></div>
+    </div>
+    <div id="bar3" class="bar-container">
+        <div class="bar bar3"></div>
+    </div>
+    <div id="bar4" class="bar-container">
+        <div class="bar bar4"></div>
+    </div>
+    <div id="bar5" class="bar-container">
+        <div class="bar bar5"></div>
+    </div>
+    <div id="bar6" class="bar-container">
+        <div class="bar bar6"></div>
+    </div>
+    <div id="bar7" class="bar-container">
+        <div class="bar bar7"></div>
+    </div>
+    <div id="bar8" class="bar-container">
+        <div class="bar bar8"></div>
+    </div>
+    <div id="bar9" class="bar-container">
+        <div class="bar bar9"></div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.5.4/dist/socket.io.min.js"></script>
     <script>
-        // Connexion au serveur WebSocket via Socket.io
-        const socket = io("https://dse-9zybblybf-alexandrerollands-projects.vercel.app");
+        const socket = io("https://dse-9zybblybf-alexandrerollands-projects.vercel.app"); // Remplace par ton URL de serveur
 
-        const ctx = document.getElementById('myChart').getContext('2d');
-        const myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Barre 1', 'Barre 2', 'Barre 3'],
-                datasets: [{
-                    label: 'Valeurs',
-                    data: [0, 0, 0],
-                    backgroundColor: ['red', 'blue', 'green']
-                }]
-            },
-            options: {
-                responsive: true
+        socket.on("updateBars", (data) => {
+            console.log("[Client] Données reçues pour mise à jour :", data);
+
+            // Met à jour la largeur de chaque barre
+            for (let i = 0; i < data.length; i++) {
+                const bar = document.querySelector(`#bar${i + 1} .bar`);
+                bar.style.width = data[i] + "%";  // La largeur est définie par la valeur (en pourcentage)
             }
         });
 
-        // Écouter les mises à jour envoyées par le serveur
-        socket.on('updateBars', (data) => {
-            console.log("[Client] Données reçues pour mise à jour :", data);
-            myChart.data.datasets[0].data = data;
-            myChart.update();
-        });
+        // Fonction pour envoyer un message au serveur lorsque le bouton est cliqué
+        function sendIncrement(barIndex) {
+            socket.emit("increment", { barIndex });
+        }
+
+        document.getElementById("btn1").addEventListener("click", () => sendIncrement(0));
+        document.getElementById("btn2").addEventListener("click", () => sendIncrement(1));
+        document.getElementById("btn3").addEventListener("click", () => sendIncrement(2));
+        document.getElementById("btn4").addEventListener("click", () => sendIncrement(3));
+        document.getElementById("btn5").addEventListener("click", () => sendIncrement(4));
+        document.getElementById("btn6").addEventListener("click", () => sendIncrement(5));
+        document.getElementById("btn7").addEventListener("click", () => sendIncrement(6));
+        document.getElementById("btn8").addEventListener("click", () => sendIncrement(7));
+        document.getElementById("btn9").addEventListener("click", () => sendIncrement(8));
     </script>
+    <button id="btn1">Incrémenter Barre 1</button>
+    <button id="btn2">Incrémenter Barre 2</button>
+    ...
+    
 </body>
 </html>
