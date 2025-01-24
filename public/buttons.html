@@ -4,30 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contrôles</title>
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> <!-- Inclure socket.io -->
 </head>
 <body>
     <button id="btn1">Incrémenter Barre 1</button>
     <button id="btn2">Incrémenter Barre 2</button>
     <button id="btn3">Incrémenter Barre 3</button>
-    <a href="/index.html">RESULTATS</a>
+    <button id="btn4">Incrémenter Barre 4</button>
+    <button id="btn5">Incrémenter Barre 5</button>
+    <button id="btn6">Incrémenter Barre 6</button>
+    <button id="btn7">Incrémenter Barre 7</button>
+    <button id="btn8">Incrémenter Barre 8</button>
+    <button id="btn9">Incrémenter Barre 9</button>
+    <a href="/index.html">Voir les résultats</a>
 
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script>
-        const socket = io("https://dse-9zybblybf-alexandrerollands-projects.vercel.app");
+        const socket = io();
 
-        document.getElementById('btn1').addEventListener('click', () => {
+        // Attachement des événements aux boutons
+        document.getElementById("btn1").addEventListener("click", () => {
             console.log("[Client] Incrémentation demandée pour la Barre 1");
-            socket.emit('increment', { barIndex: 0 });
+            socket.emit("increment", { barIndex: 0 });
         });
-
-        document.getElementById('btn2').addEventListener('click', () => {
+        document.getElementById("btn2").addEventListener("click", () => {
             console.log("[Client] Incrémentation demandée pour la Barre 2");
-            socket.emit('increment', { barIndex: 1 });
+            socket.emit("increment", { barIndex: 1 });
+        });
+        document.getElementById("btn3").addEventListener("click", () => {
+            console.log("[Client] Incrémentation demandée pour la Barre 3");
+            socket.emit("increment", { barIndex: 2 });
+        });
+        document.getElementById("btn4").addEventListener("click", () => {
+            console.log("[Client] Incrémentation demandée pour la Barre 4");
+            socket.emit("increment", { barIndex: 3 });
+        });
+        document.getElementById("btn5").addEventListener("click", () => {
+            console.log("[Client] Incrémentation demandée pour la Barre 5");
+            socket.emit("increment", { barIndex: 4 });
+        });
+        document.getElementById("btn6").addEventListener("click", () => {
+            console.log("[Client] Incrémentation demandée pour la Barre 6");
+            socket.emit("increment", { barIndex: 5 });
+        });
+        document.getElementById("btn7").addEventListener("click", () => {
+            console.log("[Client] Incrémentation demandée pour la Barre 7");
+            socket.emit("increment", { barIndex: 6 });
+        });
+        document.getElementById("btn8").addEventListener("click", () => {
+            console.log("[Client] Incrémentation demandée pour la Barre 8");
+            socket.emit("increment", { barIndex: 7 });
+        });
+        document.getElementById("btn9").addEventListener("click", () => {
+            console.log("[Client] Incrémentation demandée pour la Barre 9");
+            socket.emit("increment", { barIndex: 8 });
         });
 
-        document.getElementById('btn3').addEventListener('click', () => {
-            console.log("[Client] Incrémentation demandée pour la Barre 3");
-            socket.emit('increment', { barIndex: 2 });
+        // Logs pour vérifier la connexion et les erreurs
+        socket.on("connect", () => {
+            console.log("[Client] Connecté au serveur Socket.io !");
+        });
+
+        socket.on("connect_error", (err) => {
+            console.error("[Client] Erreur de connexion Socket.io :", err);
         });
     </script>
 </body>
