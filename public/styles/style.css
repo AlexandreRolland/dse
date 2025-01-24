@@ -1,0 +1,16 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+#bars {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.bar {
+    height: 30px;
+    margin: 5px 0;
+    background-color: lightgray;
+    transition: width 0.5s ease-in-out;
+}

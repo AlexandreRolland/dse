@@ -4,75 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barres Dynamiques</title>
-    <style>
-        .bar-container {
-            display: flex;
-            flex-direction: column; /* Aligner les barres verticalement */
-            gap: 10px;
-            height: 100vh;
-            justify-content: center; /* Centrer verticalement les barres */
-        }
-
-        .bar {
-            height: 30px; /* Hauteur des barres */
-            width: 0; /* La largeur sera dynamique */
-            background-color: red; /* Couleur de la barre */
-            border-radius: 5px;
-            transition: width 0.3s ease; /* Animation pour la largeur */
-        }
-
-        .bar1 { background-color: red; }
-        .bar2 { background-color: blue; }
-        .bar3 { background-color: green; }
-        .bar4 { background-color: yellow; }
-        .bar5 { background-color: purple; }
-        .bar6 { background-color: orange; }
-        .bar7 { background-color: pink; }
-        .bar8 { background-color: cyan; }
-        .bar9 { background-color: magenta; }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/styles/style.css">
 </head>
 <body>
-    <div class="bar-container">
-        <div class="bar bar1" id="bar1"></div>
-        <div class="bar bar2" id="bar2"></div>
-        <div class="bar bar3" id="bar3"></div>
-        <div class="bar bar4" id="bar4"></div>
-        <div class="bar bar5" id="bar5"></div>
-        <div class="bar bar6" id="bar6"></div>
-        <div class="bar bar7" id="bar7"></div>
-        <div class="bar bar8" id="bar8"></div>
-        <div class="bar bar9" id="bar9"></div>
+    <h1>Suivi des Barres</h1>
+    <div id="bars">
+        <div id="bar1" class="bar"></div>
+        <div id="bar2" class="bar"></div>
+        <div id="bar3" class="bar"></div>
     </div>
+    <a href="/buttons.html">Contrôles</a>
 
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script>
-        const socket = io();
+        const socket = io("https://dse-ruby.vercel.app"); // Remplace par l'URL de ton backend
 
-        // Fonction pour mettre à jour la largeur de la barre
-        function updateBarWidth(barId, value) {
-            const bar = document.getElementById(barId);
-            bar.style.width = `${value}%`; // La valeur est en pourcentage
-        }
-
-        // Recevoir les données des barres
         socket.on("updateBars", (data) => {
             console.log("[Client] Données reçues pour mise à jour :", data);
 
-            // Mettre à jour la largeur de chaque barre
             data.forEach((value, index) => {
-                const barId = `bar${index + 1}`;
-                updateBarWidth(barId, value);
+                const bar = document.getElementById(`bar${index + 1}`);
+                bar.style.width = `${value}%`;
             });
-        });
-
-        // Logs pour vérifier la connexion et les erreurs
-        socket.on("connect", () => {
-            console.log("[Client] Connecté au serveur Socket.io !");
-        });
-
-        socket.on("connect_error", (err) => {
-            console.error("[Client] Erreur de connexion Socket.io :", err);
         });
     </script>
 </body>

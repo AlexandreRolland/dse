@@ -6,12 +6,12 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "*", // Autorise toutes les origines pour le débogage
+        origin: "*", // Autorise toutes les origines pour débogage
     },
 });
 
 // Données initiales des barres
-let barValues = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+let barValues = [0, 0, 0];
 
 // Middleware pour logger chaque requête HTTP
 app.use((req, res, next) => {
@@ -25,7 +25,7 @@ app.get("/health", (req, res) => {
     res.status(200).json({ status: "ok", barValues });
 });
 
-// Événements Socket.io
+// Serveur WebSocket
 io.on("connection", (socket) => {
     console.log("[Socket.io] Un client est connecté :", socket.id);
 
