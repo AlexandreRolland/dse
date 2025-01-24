@@ -1,38 +1,36 @@
+const express = require("express");
+const http = require("http");
 const { Server } = require("socket.io");
-const { createServer } = require("http");
 
-// Données initiales
-const barValues = [0, 0, 0];
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "*", // Permet l'accès de n'importe quelle origine
+    },
+});
 
-module.exports = (req, res) => {
-    // Initialisation du serveur WebSocket si ce n'est pas déjà fait
-    if (!res.socket.server.io) {
-        console.log("Démarrage du serveur WebSocket...");
-        const httpServer = createServer();
-        const io = new Server(httpServer, {
-            cors: {
-                origin: "*", // Permet toutes les origines
-            },
-        });
+// Données des barres
+let barValues = [0, 0, 0];
 
-        // Gestion des connexions
-        io.on("connection", (socket) => {
-            console.log("Client connecté");
+// Connexion Socket.io
+io.on("connection", (socket) => {
+    console.log("Un client est connecté");
 
-            // Envoie les valeurs actuelles
-            socket.emit("updateBars", barValues);
+    // Envoie les valeurs initiales des barres
+    socket.emit("updateBars", barValues);
 
-            // Mise à jour des données
-            socket.on("increment", (data) => {
-                const { barIndex } = data;
-                barValues[barIndex]++;
-                io.emit("updateBars", barValues); // Diffuse les nouvelles données
-            });
-        });
+    // Réception des demandes d'incrémentation
+    socket.on("increment", (data) => {
+        const { barIndex } = data;
+        if (barIndex >= 0 && barIndex < barValues.length) {
+            barValues[barIndex]++;
+            io.emit("updateBars", barValues); // Diffuse les nouvelles valeurs
+        }
+    });
+});
 
-        res.socket.server.io = io;
-        res.socket.server.httpServer = httpServer;
-        httpServer.listen(0); // Nécessaire pour les fonctions serverless
-    }
-    res.end("WebSocket API ready");
-};
+const PORT = process.env.PORT || 3001; // Utilise le port défini par Vercel
+server.listen(PORT, () => {
+    console.log(`Serveur WebSocket en cours d'exécution sur le port ${PORT}`);
+});
