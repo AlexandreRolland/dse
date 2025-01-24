@@ -1,31 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contrôles</title>
-    <a href="/index.html">RESULTATS</a>
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-</head>
-<body>
-    <button id="btn1">Incrémenter Barre 1</button>
-    <button id="btn2">Incrémenter Barre 2</button>
-    <button id="btn3">Incrémenter Barre 3</button>
+<script>
+    const socket = io("https://dse-o4si01tiq-alexandrerollands-projects.vercel.app"); // Remplace par l'URL correcte
 
-    <script>
-        const socket = io("/api"); // L'API WebSocket est accessible via /api
+    // Attache des événements avec des logs pour les boutons
+    document.getElementById("btn1").addEventListener("click", () => {
+        console.log("[Client] Incrémentation demandée pour la Barre 1");
+        socket.emit("increment", { barIndex: 0 });
+    });
 
-        document.getElementById("btn1").addEventListener("click", () => {
-            socket.emit("increment", { barIndex: 0 });
-        });
+    document.getElementById("btn2").addEventListener("click", () => {
+        console.log("[Client] Incrémentation demandée pour la Barre 2");
+        socket.emit("increment", { barIndex: 1 });
+    });
 
-        document.getElementById("btn2").addEventListener("click", () => {
-            socket.emit("increment", { barIndex: 1 });
-        });
+    document.getElementById("btn3").addEventListener("click", () => {
+        console.log("[Client] Incrémentation demandée pour la Barre 3");
+        socket.emit("increment", { barIndex: 2 });
+    });
 
-        document.getElementById("btn3").addEventListener("click", () => {
-            socket.emit("increment", { barIndex: 2 });
-        });
-    </script>
-</body>
-</html>
+    // Log pour voir si le client est bien connecté
+    socket.on("connect", () => {
+        console.log("[Client] Connecté au serveur Socket.io !");
+    });
+
+    // Log en cas d'erreur de connexion au WebSocket
+    socket.on("connect_error", (err) => {
+        console.error("[Client] Erreur de connexion Socket.io :", err);
+    });
+</script>
